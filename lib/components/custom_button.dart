@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/app_theme.dart';
+import '../bloc/button/index.dart';
 
 class CustomButton extends StatelessWidget {
+  final String id; // Unique identifier for the button
   final String text;
   final VoidCallback onPressed;
-  final bool isLoading;
   final bool isOutlined;
   final double width;
   final IconData? icon;
@@ -13,40 +15,63 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.isLoading = false,
     this.isOutlined = false,
     this.width = double.infinity,
     this.icon,
-  });
+    String? id,
+  }) : id = id ?? text;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child:
-          isOutlined
-              ? OutlinedButton(
-                onPressed: isLoading ? null : onPressed,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: AppTheme.primaryColor,
-                    width: 1.5,
+    return BlocBuilder<ButtonBloc, ButtonState>(
+      builder: (context, state) {
+        final isLoading = state.isLoading(id);
+
+        return SizedBox(
+          width: width,
+          child:
+              isOutlined
+                  ? OutlinedButton(
+                    onPressed: isLoading ? null : _handlePress(context),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(
+                        color: AppTheme.primaryColor,
+                        width: 1.5,
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: _buildButtonContent(isLoading),
+                  )
+                  : ElevatedButton(
+                    onPressed: isLoading ? null : _handlePress(context),
+                    child: _buildButtonContent(isLoading),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: _buildButtonContent(),
-              )
-              : ElevatedButton(
-                onPressed: isLoading ? null : onPressed,
-                child: _buildButtonContent(),
-              ),
+        );
+      },
     );
   }
 
-  Widget _buildButtonContent() {
+  VoidCallback _handlePress(BuildContext context) {
+    return () {
+      // Dispatch button press event
+      context.read<ButtonBloc>().add(ButtonLoading(id, true));
+
+      // Call the actual onPressed handler
+      onPressed();
+
+      // Reset the button state after a delay
+      Future.delayed(const Duration(seconds: 2), () {
+        if (context.mounted) {
+          context.read<ButtonBloc>().add(ButtonReset(id));
+        }
+      });
+    };
+  }
+
+  Widget _buildButtonContent(bool isLoading) {
     return isLoading
         ? const SizedBox(
           height: 20,

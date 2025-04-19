@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/button/index.dart';
+import 'bloc/auth/index.dart';
+import 'bloc/password_reset/index.dart';
 import 'theme/app_theme.dart';
 import 'screens/splash_screen.dart';
 
@@ -30,11 +34,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Your App Name',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ButtonBloc>(create: (context) => ButtonBloc()),
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc()..add(const AppStarted()),
+        ),
+        BlocProvider<PasswordResetBloc>(
+          create: (context) => PasswordResetBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Your App Name',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

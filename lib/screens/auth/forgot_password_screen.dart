@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/button/index.dart';
+import '../../bloc/password_reset/index.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_text_field.dart';
 import '../../theme/app_theme.dart';
@@ -13,8 +16,14 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
-  bool _isEmailSent = false;
+  static const String resetButtonId = 'reset_password_button';
+
+  @override
+  void initState() {
+    super.initState();
+    // Reset the password reset BLoC state when the screen is opened
+    context.read<PasswordResetBloc>().add(const PasswordResetReset());
+  }
 
   @override
   void dispose() {
@@ -24,35 +33,57 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _resetPassword() {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate password reset process
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-          _isEmailSent = true;
-        });
-      });
+      // Use PasswordResetBloc to handle the password reset request
+      context.read<PasswordResetBloc>().add(
+        PasswordResetRequested(_emailController.text),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppTheme.textPrimaryColor),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: _isEmailSent ? _buildSuccessView() : _buildResetForm(),
-        ),
-      ),
+    return BlocConsumer<PasswordResetBloc, PasswordResetState>(
+      listener: (context, state) {
+        if (state.status == PasswordResetStatus.failure) {
+          // Reset button loading state
+          context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
+
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage ?? 'Password reset failed'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        } else if (state.status == PasswordResetStatus.loading) {
+          // Set button loading state
+          context.read<ButtonBloc>().add(
+            const ButtonLoading(resetButtonId, true),
+          );
+        } else if (state.status == PasswordResetStatus.success) {
+          // Reset button loading state
+          context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppTheme.backgroundColor,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: AppTheme.textPrimaryColor),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child:
+                  state.status == PasswordResetStatus.success
+                      ? _buildSuccessView(state.email)
+                      : _buildResetForm(),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -93,16 +124,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
           // Reset password button
           CustomButton(
+            id: resetButtonId,
             text: 'Reset Password',
             onPressed: _resetPassword,
-            isLoading: _isLoading,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSuccessView() {
+  Widget _buildSuccessView(String email) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +145,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'We have sent a password reset link to ${_emailController.text}',
+            'We have sent a password reset link to $email',
             textAlign: TextAlign.center,
             style: AppTheme.bodyText,
           ),
