@@ -42,11 +42,20 @@ class CustomButton extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
+                      // Add consistent disabled style
+                      disabledBackgroundColor: Colors.transparent,
+                      disabledForegroundColor: AppTheme.primaryColor
+                          .withOpacity(0.8),
                     ),
                     child: _buildButtonContent(isLoading),
                   )
                   : ElevatedButton(
                     onPressed: isLoading ? null : _handlePress(context),
+                    style: ElevatedButton.styleFrom(
+                      // Add consistent disabled style
+                      disabledBackgroundColor: AppTheme.primaryColor,
+                      disabledForegroundColor: Colors.white,
+                    ),
                     child: _buildButtonContent(isLoading),
                   ),
         );
@@ -61,13 +70,6 @@ class CustomButton extends StatelessWidget {
 
       // Call the actual onPressed handler
       onPressed();
-
-      // Reset the button state after a delay
-      Future.delayed(const Duration(seconds: 2), () {
-        if (context.mounted) {
-          context.read<ButtonBloc>().add(ButtonReset(id));
-        }
-      });
     };
   }
 

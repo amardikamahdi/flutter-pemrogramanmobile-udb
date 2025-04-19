@@ -13,32 +13,68 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isReadyToNavigate = false;
+
   @override
   void initState() {
     super.initState();
-    // Simulate loading time
+
+    // Trigger authentication check immediately
+    final authBloc = context.read<AuthBloc>();
+    authBloc.add(const AppStarted());
+
+    // But ensure we don't navigate away until minimum display time is reached
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        // Check authentication status
-        final authBloc = context.read<AuthBloc>();
-        authBloc.add(const AppStarted());
+        setState(() {
+          _isReadyToNavigate = true;
+
+          // After delay, check current auth state and navigate if needed
+          _checkAuthStateAndNavigate();
+        });
       }
     });
+  }
+
+  // Helper method to check auth state and navigate
+  void _checkAuthStateAndNavigate() {
+    if (!mounted) return;
+
+    final currentState = context.read<AuthBloc>().state;
+
+    if (currentState.status == AuthStatus.authenticated) {
+      // Navigate to the home screen (instead of Placeholder)
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder:
+              (context) =>
+                  const LoginScreen(), // Temporarily using LoginScreen until a proper home screen is created
+        ),
+      );
+    } else if (currentState.status == AuthStatus.unauthenticated) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+    // If status is still unknown, wait for BlocListener to handle it
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        // Only navigate if minimum display time has passed
+        if (!_isReadyToNavigate) return;
+
         if (state.status == AuthStatus.authenticated) {
-          // Navigate to home screen if authenticated
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const Placeholder(),
-            ), // Replace with your home screen
+              builder:
+                  (context) =>
+                      const LoginScreen(), // Temporarily using LoginScreen until a proper home screen is created
+            ),
           );
         } else if (state.status == AuthStatus.unauthenticated) {
-          // Navigate to login screen if not authenticated
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const LoginScreen()),
           );

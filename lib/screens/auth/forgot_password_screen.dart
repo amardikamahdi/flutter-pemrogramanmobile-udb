@@ -5,6 +5,7 @@ import '../../bloc/password_reset/index.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_text_field.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/snackbar_utils.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -15,7 +16,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   static const String resetButtonId = 'reset_password_button';
 
   @override
@@ -32,12 +32,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _resetPassword() {
-    if (_formKey.currentState!.validate()) {
-      // Use PasswordResetBloc to handle the password reset request
-      context.read<PasswordResetBloc>().add(
-        PasswordResetRequested(_emailController.text),
-      );
-    }
+    // First set the button to loading state just like how Sign Up works
+    context.read<ButtonBloc>().add(const ButtonLoading(resetButtonId, true));
+
+    // Then use PasswordResetBloc to handle the password reset request
+    context.read<PasswordResetBloc>().add(
+      PasswordResetRequested(_emailController.text),
+    );
   }
 
   @override
@@ -48,21 +49,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           // Reset button loading state
           context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
 
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage ?? 'Password reset failed'),
-              backgroundColor: Colors.red,
-            ),
+          // Show error message using global SnackBar utility
+          SnackBarUtils.showErrorSnackBar(
+            context,
+            state.errorMessage ?? 'Password reset failed',
           );
         } else if (state.status == PasswordResetStatus.loading) {
-          // Set button loading state
-          context.read<ButtonBloc>().add(
-            const ButtonLoading(resetButtonId, true),
-          );
+          // No need to manually set loading state here - this matches Sign Up behavior
         } else if (state.status == PasswordResetStatus.success) {
           // Reset button loading state
           context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
+
+          // Show success message using global utility
+          SnackBarUtils.showSuccessSnackBar(
+            context,
+            'Password reset link sent',
+          );
         }
       },
       builder: (context, state) {
@@ -88,48 +90,34 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildResetForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Forgot Password', style: AppTheme.heading1),
-          const SizedBox(height: 8),
-          Text(
-            'Enter your email and we\'ll send you a link to reset your password',
-            style: AppTheme.caption,
-          ),
-          const SizedBox(height: 32),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Forgot Password', style: AppTheme.heading1),
+        const SizedBox(height: 8),
+        Text(
+          'Enter your email and we\'ll send you a link to reset your password',
+          style: AppTheme.caption,
+        ),
+        const SizedBox(height: 32),
 
-          // Email field
-          CustomTextField(
-            label: 'Email',
-            hint: 'Enter your email',
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            prefixIcon: Icons.email_outlined,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!RegExp(
-                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-              ).hasMatch(value)) {
-                return 'Please enter a valid email';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 32),
+        // Email field
+        CustomTextField(
+          label: 'Email',
+          hint: 'Enter your email',
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          prefixIcon: Icons.email_outlined,
+        ),
+        const SizedBox(height: 32),
 
-          // Reset password button
-          CustomButton(
-            id: resetButtonId,
-            text: 'Reset Password',
-            onPressed: _resetPassword,
-          ),
-        ],
-      ),
+        // Reset password button
+        CustomButton(
+          id: resetButtonId,
+          text: 'Reset Password',
+          onPressed: _resetPassword,
+        ),
+      ],
     );
   }
 

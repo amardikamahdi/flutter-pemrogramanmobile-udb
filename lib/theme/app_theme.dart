@@ -89,9 +89,20 @@ class AppTheme {
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: primaryColor, width: 1.5),
       ),
+      // Remove visual error indicators
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: errorColor, width: 1.5),
+        borderSide: BorderSide.none,
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide.none,
+      ),
+      // Hide error text by making it zero height/font
+      errorStyle: const TextStyle(
+        height: 0,
+        fontSize: 0,
+        color: Colors.transparent,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       hintStyle: GoogleFonts.poppins(
