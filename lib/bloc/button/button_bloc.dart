@@ -16,8 +16,6 @@ class ButtonBloc extends Bloc<ButtonEvent, ButtonState> {
   }
 
   void _onButtonPressed(ButtonPressed event, Emitter<ButtonState> emit) {
-    // Handle button press action if needed
-    // For now, just set loading state to true
     final loadingButtons = Map<String, bool>.from(state.loadingButtons);
     loadingButtons[event.buttonId] = true;
     emit(state.copyWith(loadingButtons: loadingButtons));

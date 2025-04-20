@@ -4,7 +4,7 @@ import '../theme/app_theme.dart';
 import '../bloc/button/index.dart';
 
 class CustomButton extends StatelessWidget {
-  final String id; // Unique identifier for the button
+  final String id;
   final String text;
   final VoidCallback onPressed;
   final bool isOutlined;
@@ -42,7 +42,6 @@ class CustomButton extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      // Add consistent disabled style
                       disabledBackgroundColor: Colors.transparent,
                       disabledForegroundColor: AppTheme.primaryColor
                           .withOpacity(0.8),
@@ -52,7 +51,6 @@ class CustomButton extends StatelessWidget {
                   : ElevatedButton(
                     onPressed: isLoading ? null : _handlePress(context),
                     style: ElevatedButton.styleFrom(
-                      // Add consistent disabled style
                       disabledBackgroundColor: AppTheme.primaryColor,
                       disabledForegroundColor: Colors.white,
                     ),
@@ -65,10 +63,8 @@ class CustomButton extends StatelessWidget {
 
   VoidCallback _handlePress(BuildContext context) {
     return () {
-      // Dispatch button press event
       context.read<ButtonBloc>().add(ButtonLoading(id, true));
 
-      // Call the actual onPressed handler
       onPressed();
     };
   }
@@ -76,8 +72,8 @@ class CustomButton extends StatelessWidget {
   Widget _buildButtonContent(bool isLoading) {
     return isLoading
         ? const SizedBox(
-          height: 20,
-          width: 20,
+          height: 19,
+          width: 19,
           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
         )
         : Row(

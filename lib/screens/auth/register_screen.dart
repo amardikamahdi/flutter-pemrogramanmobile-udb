@@ -77,6 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           iconTheme: const IconThemeData(color: AppTheme.textPrimaryColor),
+          automaticallyImplyLeading: true,
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -86,18 +87,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Welcome text
-                  Text('Create Account', style: AppTheme.heading1),
+                  Text('Daftar', style: AppTheme.heading1),
                   const SizedBox(height: 8),
                   Text(
-                    'Fill in your details to get started',
+                    'Masukkan data diri anda untuk melanjutkan',
                     style: AppTheme.caption,
                   ),
                   const SizedBox(height: 32),
 
                   // Name field
                   CustomTextField(
-                    label: 'Full Name',
-                    hint: 'Enter your full name',
+                    label: 'Nama Lengkap',
+                    hint: 'Masukkan nama lengkap',
                     controller: _nameController,
                     prefixIcon: Icons.person_outline,
                   ),
@@ -105,8 +106,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Email field
                   CustomTextField(
-                    label: 'Email',
-                    hint: 'Enter your email',
+                    label: 'Surel',
+                    hint: 'Masukkan surel anda',
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: Icons.email_outlined,
@@ -115,8 +116,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Password field
                   CustomTextField(
-                    label: 'Password',
-                    hint: 'Enter your password',
+                    label: 'Kata Sandi',
+                    hint: 'Masukkan kata sandi',
                     controller: _passwordController,
                     isPassword: true,
                     prefixIcon: Icons.lock_outline,
@@ -125,8 +126,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Confirm Password field
                   CustomTextField(
-                    label: 'Confirm Password',
-                    hint: 'Confirm your password',
+                    label: 'Konfirmasi Kata Sandi',
+                    hint: 'Masukkan kata sandi lagi',
                     controller: _confirmPasswordController,
                     isPassword: true,
                     prefixIcon: Icons.lock_outline,
@@ -136,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Register button
                   CustomButton(
                     id: registerButtonId,
-                    text: 'Sign Up',
+                    text: 'Daftar',
                     onPressed: () => _register(context),
                   ),
                   const SizedBox(height: 24),
@@ -147,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const Expanded(child: Divider()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text('OR', style: AppTheme.caption),
+                        child: Text('Atau', style: AppTheme.caption),
                       ),
                       const Expanded(child: Divider()),
                     ],
@@ -156,7 +157,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   // Social login buttons
                   SocialButton(
-                    label: 'Sign Up with Google',
+                    label: 'Daftar dengan Google',
                     icon: Icons.g_mobiledata_rounded,
                     onPressed: () {
                       // TODO: Implement Google Sign-Up
@@ -164,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
                   SocialButton(
-                    label: 'Sign Up with Facebook',
+                    label: 'Daftar dengan Facebook',
                     icon: Icons.facebook,
                     onPressed: () {
                       // TODO: Implement Facebook Sign-Up
@@ -176,16 +177,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Already have an account? ",
-                        style: AppTheme.caption,
-                      ),
+                      Text("Sudah punya akun?", style: AppTheme.caption),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context); // Go back to login
                         },
                         child: Text(
-                          'Sign In',
+                          'Masuk',
                           style: AppTheme.caption.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.w600,

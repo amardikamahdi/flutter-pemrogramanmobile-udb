@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Colors
   static const Color primaryColor = Color(0xFF6C63FF);
   static const Color accentColor = Color(0xFF03DAC6);
   static const Color backgroundColor = Color(0xFFF8F9FA);
@@ -12,7 +11,6 @@ class AppTheme {
   static const Color errorColor = Color(0xFFB00020);
   static const Color successColor = Color(0xFF4CAF50);
 
-  // Text Styles
   static TextStyle heading1 = GoogleFonts.poppins(
     fontSize: 28,
     fontWeight: FontWeight.bold,
@@ -41,7 +39,6 @@ class AppTheme {
     color: textSecondaryColor,
   );
 
-  // Theme Data
   static ThemeData lightTheme = ThemeData(
     primaryColor: primaryColor,
     scaffoldBackgroundColor: backgroundColor,
@@ -89,7 +86,6 @@ class AppTheme {
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: primaryColor, width: 1.5),
       ),
-      // Remove visual error indicators
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
@@ -98,7 +94,6 @@ class AppTheme {
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
       ),
-      // Hide error text by making it zero height/font
       errorStyle: const TextStyle(
         height: 0,
         fontSize: 0,
