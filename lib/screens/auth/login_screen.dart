@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state.status == AuthStatus.authenticated) {
           context.read<ButtonBloc>().add(const ButtonReset(loginButtonId));
 
-          SnackBarUtils.showSuccessSnackBar(context, 'Login successful');
+          SnackBarUtils.showSuccessSnackBar(context, 'Login berhasil');
 
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const LoginScreen()),

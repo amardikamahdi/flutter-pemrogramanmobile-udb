@@ -45,13 +45,13 @@ class NetworkErrorScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  'Connection Problem',
+                  'Masalah Koneksi',
                   style: AppTheme.heading1,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'We couldn\'t connect to our servers. Please check your internet connection and try again.',
+                  'Kami tidak dapat terhubung ke server. Silakan periksa koneksi internet Anda dan coba lagi.',
                   style: AppTheme.subtitle.copyWith(color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
@@ -60,13 +60,13 @@ class NetworkErrorScreen extends StatelessWidget {
                   width: 200,
                   child: CustomButton(
                     id: retryButtonId,
-                    text: 'Try Again',
+                    text: 'Coba Lagi',
                     onPressed: () => _retryConnection(context),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Waiting for connection...',
+                  'Menunggu koneksi...',
                   style: AppTheme.caption.copyWith(
                     fontStyle: FontStyle.italic,
                     color: Colors.grey[500],

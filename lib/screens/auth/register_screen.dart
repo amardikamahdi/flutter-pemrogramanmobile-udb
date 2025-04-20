@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _register(BuildContext context) {
     // Validate passwords match
     if (_passwordController.text != _confirmPasswordController.text) {
-      SnackBarUtils.showErrorSnackBar(context, 'Passwords do not match');
+      SnackBarUtils.showErrorSnackBar(context, 'Kata sandi tidak cocok');
       return;
     }
 
@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           context.read<ButtonBloc>().add(const ButtonReset(registerButtonId));
 
           // Show success message using global utility
-          SnackBarUtils.showSuccessSnackBar(context, 'Registration successful');
+          SnackBarUtils.showSuccessSnackBar(context, 'Pendaftaran berhasil');
 
           // Go back to login screen
           Navigator.pop(context);

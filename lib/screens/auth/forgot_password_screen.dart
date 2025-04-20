@@ -52,7 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           // Show error message using global SnackBar utility
           SnackBarUtils.showErrorSnackBar(
             context,
-            state.errorMessage ?? 'Password reset failed',
+            state.errorMessage ?? 'Pengaturan ulang kata sandi gagal',
           );
         } else if (state.status == PasswordResetStatus.loading) {
           // No need to manually set loading state here - this matches Sign Up behavior
@@ -63,7 +63,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           // Show success message using global utility
           SnackBarUtils.showSuccessSnackBar(
             context,
-            'Password reset link sent',
+            'Tautan atur ulang kata sandi telah dikirim',
           );
         }
       },
