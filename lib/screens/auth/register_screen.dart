@@ -33,13 +33,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _register(BuildContext context) {
-    // Validate passwords match
     if (_passwordController.text != _confirmPasswordController.text) {
       SnackBarUtils.showErrorSnackBar(context, 'Kata sandi tidak cocok');
       return;
     }
 
-    // Use Auth BLoC to handle registration
     context.read<AuthBloc>().add(
       SignUp(
         username: _nameController.text,
@@ -54,20 +52,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.authenticated) {
-          // Reset register button loading state
           context.read<ButtonBloc>().add(const ButtonReset(registerButtonId));
 
-          // Show success message using global utility
           SnackBarUtils.showSuccessSnackBar(context, 'Pendaftaran berhasil');
 
-          // Go back to login screen
           Navigator.pop(context);
         } else if (state.status == AuthStatus.unauthenticated &&
             state.error != null) {
-          // Reset register button loading state
           context.read<ButtonBloc>().add(const ButtonReset(registerButtonId));
 
-          // Show error message using global utility
           SnackBarUtils.showErrorSnackBar(context, state.error!);
         }
       },
@@ -86,7 +79,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Welcome text
                   Text('Daftar', style: AppTheme.heading1),
                   const SizedBox(height: 8),
                   Text(
@@ -95,7 +87,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Name field
                   CustomTextField(
                     label: 'Nama Lengkap',
                     hint: 'Masukkan nama lengkap',
@@ -104,7 +95,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Email field
                   CustomTextField(
                     label: 'Surel',
                     hint: 'Masukkan surel anda',
@@ -114,7 +104,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Password field
                   CustomTextField(
                     label: 'Kata Sandi',
                     hint: 'Masukkan kata sandi',
@@ -124,7 +113,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Confirm Password field
                   CustomTextField(
                     label: 'Konfirmasi Kata Sandi',
                     hint: 'Masukkan kata sandi lagi',
@@ -134,7 +122,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Register button
                   CustomButton(
                     id: registerButtonId,
                     text: 'Daftar',
@@ -142,7 +129,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // OR divider
                   Row(
                     children: [
                       const Expanded(child: Divider()),
@@ -155,32 +141,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Social login buttons
                   SocialButton(
                     label: 'Daftar dengan Google',
                     icon: Icons.g_mobiledata_rounded,
-                    onPressed: () {
-                      // TODO: Implement Google Sign-Up
-                    },
+                    onPressed: () {},
                   ),
                   const SizedBox(height: 16),
                   SocialButton(
                     label: 'Daftar dengan Facebook',
                     icon: Icons.facebook,
-                    onPressed: () {
-                      // TODO: Implement Facebook Sign-Up
-                    },
+                    onPressed: () {},
                   ),
                   const SizedBox(height: 32),
 
-                  // Login link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Sudah punya akun?", style: AppTheme.caption),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Go back to login
+                          Navigator.pop(context);
                         },
                         child: Text(
                           'Masuk',

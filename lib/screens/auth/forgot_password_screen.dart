@@ -21,7 +21,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   void initState() {
     super.initState();
-    // Reset the password reset BLoC state when the screen is opened
     context.read<PasswordResetBloc>().add(const PasswordResetReset());
   }
 
@@ -32,10 +31,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _resetPassword() {
-    // First set the button to loading state just like how Sign Up works
     context.read<ButtonBloc>().add(const ButtonLoading(resetButtonId, true));
 
-    // Then use PasswordResetBloc to handle the password reset request
     context.read<PasswordResetBloc>().add(
       PasswordResetRequested(_emailController.text),
     );
@@ -46,21 +43,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return BlocConsumer<PasswordResetBloc, PasswordResetState>(
       listener: (context, state) {
         if (state.status == PasswordResetStatus.failure) {
-          // Reset button loading state
           context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
 
-          // Show error message using global SnackBar utility
           SnackBarUtils.showErrorSnackBar(
             context,
             state.errorMessage ?? 'Pengaturan ulang kata sandi gagal',
           );
         } else if (state.status == PasswordResetStatus.loading) {
-          // No need to manually set loading state here - this matches Sign Up behavior
         } else if (state.status == PasswordResetStatus.success) {
-          // Reset button loading state
           context.read<ButtonBloc>().add(const ButtonReset(resetButtonId));
 
-          // Show success message using global utility
           SnackBarUtils.showSuccessSnackBar(
             context,
             'Tautan atur ulang kata sandi telah dikirim',
@@ -101,7 +93,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 32),
 
-        // Email field
         CustomTextField(
           label: 'Surel',
           hint: 'Masukkan surel anda',
@@ -111,7 +102,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 32),
 
-        // Reset password button
         CustomButton(
           id: resetButtonId,
           text: 'Kirim Tautan Atur Ulang',
