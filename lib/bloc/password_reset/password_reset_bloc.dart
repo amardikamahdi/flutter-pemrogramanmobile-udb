@@ -17,10 +17,8 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     );
 
     try {
-      // Simulate API call with delay
       await Future.delayed(const Duration(seconds: 2));
 
-      // In a real app, you would make an API call to reset the password
       if (event.email.contains('@')) {
         emit(state.copyWith(status: PasswordResetStatus.success));
       } else {

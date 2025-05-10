@@ -23,20 +23,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogIn(LogIn event, Emitter<AuthState> emit) async {
-    emit(state.copyWith(status: AuthStatus.unknown)); // Loading state
+    emit(state.copyWith(status: AuthStatus.unknown));
 
     try {
-      // Simulate API call with delay
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
-      // In a real app, you'd validate credentials with an API
       if (event.username.isNotEmpty && event.password.length >= 6) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('username', event.username);
-
         emit(AuthState.authenticated(event.username));
       } else {
-        emit(const AuthState.unauthenticated('Invalid credentials'));
+        emit(
+          const AuthState.unauthenticated(
+            'Invalid credentials. Please try again.',
+          ),
+        );
       }
     } catch (e) {
       emit(AuthState.unauthenticated(e.toString()));
@@ -44,20 +45,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onSignUp(SignUp event, Emitter<AuthState> emit) async {
-    emit(state.copyWith(status: AuthStatus.unknown)); // Loading state
+    emit(state.copyWith(status: AuthStatus.unknown));
 
     try {
-      // Simulate API call with delay
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
-      // In a real app, you'd register the user with an API
-      if (event.username.isNotEmpty && event.password.length >= 6) {
+      if (event.username.isNotEmpty &&
+          event.email.contains('@') &&
+          event.password.length >= 6) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('username', event.username);
-
         emit(AuthState.authenticated(event.username));
       } else {
-        emit(const AuthState.unauthenticated('Invalid signup data'));
+        emit(
+          const AuthState.unauthenticated(
+            'Invalid signup details. Please try again.',
+          ),
+        );
       }
     } catch (e) {
       emit(AuthState.unauthenticated(e.toString()));
