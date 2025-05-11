@@ -7,6 +7,7 @@ import '../../components/custom_text_field.dart';
 import '../../components/social_button.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/snackbar_utils.dart';
+import '../home_screen_api.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -48,9 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
           context.read<ButtonBloc>().add(const ButtonReset(loginButtonId));
 
           SnackBarUtils.showSuccessSnackBar(context, 'Login berhasil');
-
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreenApi()),
           );
         } else if (state.status == AuthStatus.unauthenticated &&
             state.error != null) {

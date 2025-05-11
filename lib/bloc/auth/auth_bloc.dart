@@ -9,6 +9,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogIn>(_onLogIn);
     on<SignUp>(_onSignUp);
     on<LogOut>(_onLogOut);
+
+    // Automatically authenticate the user for demonstration purposes
+    add(const LogIn(username: "Demo User", password: "123456"));
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {

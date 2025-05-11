@@ -5,10 +5,11 @@ import 'bloc/button/index.dart';
 import 'bloc/auth/index.dart';
 import 'bloc/connectivity/index.dart';
 import 'bloc/password_reset/index.dart';
+import 'bloc/theme/index.dart';
 import 'screens/network_error_screen.dart';
 import 'services/connectivity_service.dart';
 import 'theme/app_theme.dart';
-import 'screens/splash_screen.dart';
+import 'screens/app_container.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
           create: (context) => PasswordResetBloc(),
         ),
         BlocProvider<ConnectivityBloc>(create: (context) => ConnectivityBloc()),
+        BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
       ],
       child: const AppWithConnectivity(),
     );
@@ -58,16 +59,23 @@ class AppWithConnectivity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConnectivityBloc, ConnectivityState>(
-      builder: (context, state) {
-        return MaterialApp(
-          title: 'Your App Name',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          home:
-              state.shouldShowErrorScreen &&
-                      state.status == NetworkStatus.offline
-                  ? const NetworkErrorScreen()
-                  : const ConnectivityOverlayWrapper(child: SplashScreen()),
+      builder: (context, connectivityState) {
+        return BlocBuilder<ThemeBloc, ThemeState>(
+          builder: (context, themeState) {
+            return MaterialApp(
+              title: 'Your App Name',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode:
+                  themeState.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              home:
+                  connectivityState.shouldShowErrorScreen &&
+                          connectivityState.status == NetworkStatus.offline
+                      ? const NetworkErrorScreen()
+                      : const ConnectivityOverlayWrapper(child: AppContainer()),
+            );
+          },
         );
       },
     );
