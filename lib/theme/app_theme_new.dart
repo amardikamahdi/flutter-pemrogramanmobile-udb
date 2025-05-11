@@ -8,18 +8,6 @@ class AppTheme {
   static const Color errorColor = Color(0xFFB00020);
   static const Color successColor = Color(0xFF4CAF50);
 
-  // Light theme colors
-  static const Color backgroundColor = Color(0xFFF8F9FA);
-  static const Color cardColor = Colors.white;
-  static const Color textPrimaryColor = Color(0xFF212121);
-  static const Color textSecondaryColor = Color(0xFF757575);
-
-  // Dark theme colors
-  static const Color darkBackgroundColor = Color(0xFF121212);
-  static const Color darkCardColor = Color(0xFF1E1E1E);
-  static const Color darkTextPrimaryColor = Color(0xFFECECEC);
-  static const Color darkTextSecondaryColor = Color(0xFFAAAAAA);
-
   // Text styles (light theme)
   static TextStyle heading1 = GoogleFonts.poppins(
     fontSize: 28,

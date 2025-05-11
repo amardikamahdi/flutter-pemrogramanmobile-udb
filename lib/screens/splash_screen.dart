@@ -1,3 +1,4 @@
+import 'package:app/screens/home_screen_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -69,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
             if (state.status == AuthStatus.authenticated) {
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const HomeScreenApi()),
               );
             } else if (state.status == AuthStatus.unauthenticated) {
               Navigator.of(context).pushReplacement(
